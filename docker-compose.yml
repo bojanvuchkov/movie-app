@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: app-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: halamadrid
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  springapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/app-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: halamadrid
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+
+networks:
+  app-network:
+    driver: bridge
