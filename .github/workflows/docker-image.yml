@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '17'
-        distribution: 'temurin' # Choose the JDK distribution (e.g., 'temurin', 'zulu', 'adopt')
+        distribution: 'temurin'
 
     - name: Build with Maven
       run: mvn clean install
@@ -38,3 +38,19 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/your-app:latest
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s-deployment.yaml
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
