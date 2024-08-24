@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-configmap
+  namespace: my-app-namespace
+data:
+  spring.datasource.url: "jdbc:postgresql://db-service:5432/app-db"
+  server.port: "8085"
+  spring.jpa.hibernate.ddl-auto: "update"
+  spring.jpa.show-sql: "true"
+  spring.jpa.properties.hibernate.dialect: "org.hibernate.dialect.PostgreSQLDialect"
+  spring.jpa.properties.hibernate.format_sql: "true"
