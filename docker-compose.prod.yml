@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ${{secrets.DOCKER_HUB_USERNAME}}/your-app-name:latest
+    image: ${{secrets.DOCKER_USERNAME}}/your-app-name:latest
     ports:
       - "80:80"
     environment:
