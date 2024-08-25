@@ -39,18 +39,17 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/your-app:latest
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-
+    needs: build-and-push
     steps:
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Deploy to Kubernetes
+#      - name: Install Docker Compose
+#        run: |
+#          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Deploy using Docker Compose
         run: |
-          kubectl apply -f ./k8s-deployment.yaml
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          docker-compose -f docker-compose.prod.yml up -d
