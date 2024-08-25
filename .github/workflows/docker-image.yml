@@ -51,6 +51,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          cd .. && cd .. && ls -la
+          kubectl set image deployment/deployment-app my-app=${{ secrets.DOCKER_USERNAME }}/your-app:latest
+          kubectl rollout status deployment/deployment-app
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
