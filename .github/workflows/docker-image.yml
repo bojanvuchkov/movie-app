@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -41,17 +41,18 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
 
     steps:
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/deployment-app my-app=${{ secrets.DOCKER_USERNAME }}/your-app:latest
-          kubectl rollout status deployment/deployment-app
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'latest'
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f ./k8s-deployment.yaml
+      env:
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
