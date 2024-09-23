@@ -39,22 +39,6 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/your-app:latest
 
   deploy:
-    # runs-on: ubuntu-latest
-    # needs: build
-    # steps:
-    #   - name: Checkout code
-    #     uses: actions/checkout@v2
-
-    #   - name: Set up Docker Buildx
-    #     uses: docker/setup-buildx-action@v2
-
-    #   - name: Set up Docker
-    #     uses: docker/setup-docker@v1
-
-    #   - name: Install Docker Compose
-    #     run: |
-    #       sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    #       sudo chmod +x /usr/local/bin/docker-compose
         needs: build
         runs-on: ubuntu-latest
 
@@ -70,11 +54,7 @@ jobs:
     
           - name: Deploy to server
             run: |
-              docker pull bojan2002/movie-app:latest
-              docker stop movie-app || true
-              docker rm movie-app || true
-              docker run -d --name movie-app -p 9090:9090 bojan2002/movie-app:latest
-
-      # - name: Deploy with Docker Compose
-      #   run: |
-      #     docker-compose -f docker-compose.prod.yml up -d
+              docker pull bojan2002/your-app:latest
+              docker stop your-app || true
+              docker rm your-app || true
+              docker run -d --name your-app -p 9090:9090 bojan2002/your-app:latest
